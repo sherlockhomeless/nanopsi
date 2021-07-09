@@ -1,8 +1,9 @@
+import needs
 from agent import PSI, Event
 from needs import *
 from pleasure_system import *
 from typing import *
-from motive import Motive
+from motive import *
 
 
 def start_script():
@@ -39,23 +40,39 @@ def create_agent():
     resolution = 0.3
     arousal = 0.3
     background_checks = 0.4
-    inhib_threshold = 0.5
+    inhib_threshold = -0.2  # determines the discount for all non active motives
     modulators = (resolution, arousal, background_checks, inhib_threshold)
 
-    # --- setup epistemic knowledge ---
-    # epistemic knowledge
+    # --- setup event schemata ---
+    schemata: List[EventSchemata, ...] = []
+
+    # --- setup action plans ---
+    ap_gather_food = ActionPlan(description="psi gathers berries & roots to eat",
+                                value_success=0.2, success_probability=0.8, need=TypeOfNeed.ENERGY)
+    ap_get_food_from_storage = ActionPlan(description="psi goes to storage and picks up food", value_success=0.4,
+                                          success_probability=0.8, need=TypeOfNeed.ENERGY)
+    ap_sleep = ActionPlan(description="PSI does internal clean up jobs aka 'robo-sleep'", value_success=0.1,
+                          success_probability=1.0, need=TypeOfNeed.ENERGY)
+    ap_signal_help = ActionPlan(description="", value_success=0.0, success_probability=0.0, need=TypeOfNeed.ENERGY)
+    ap_construct_ap = ActionPlan(description="", value_success=0.0, success_probability=0.0, need=TypeOfNeed.ENERGY)
+    ap_explore = ActionPlan(description="", value_success=0.0, success_probability=0.0, need=TypeOfNeed.ENERGY)
+    ap_flee = ActionPlan(description="", value_success=0.0, success_probability=0.0, need=TypeOfNeed.ENERGY)
+    ap_fight = ActionPlan(description="", value_success=0.0, success_probability=0.0, need=TypeOfNeed.ENERGY)
+    ap_group_fight = ActionPlan(description="", value_success=0.0, success_probability=0.0, need=TypeOfNeed.ENERGY)
+
+    # --- epistemic competence ---
     epistemic_competence = {
-        'hunting': 0.3,
-        'cook_food': 0.4,
-        'fight': 0.3,
-        'wood_working': 0.5
+        ap_gather_food: ap_gather_food.success_probability,
+        ap_get_food_from_storage: ap_get_food_from_storage.success_probability,
+        ap_sleep: ap_sleep.success_probability
     }
-
     # --- setup motives ---
-    motives: List[Motive, ...] = []
-    motive_food = Motive(0.9, '')
-    motive_sleep =
+    motive_food = Motive(0.9, TypeOfNeed.ENERGY,  )
+    motive_sleep = Motive(0.3, TypeOfNeed.ENERGY)
+    motive_explore = Motive(0.15, TypeOfNeed.CERTAINTY)
+    motive_build_group_coherence = Motive(0.2, TypeOfNeed.AFFILIATION)
 
+    motives: List[Motive, ...] = [motive_food, motive_sleep, motive_explore, motive_build_group_coherence]
     psi = PSI(pain_avoidance, energy_intake, affiliation, certainty, competence, need_weights, modulators,
               epistemic_competences=epistemic_competence, motives=motives)
     return psi

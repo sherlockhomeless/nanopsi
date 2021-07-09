@@ -1,14 +1,16 @@
 import enum
+from memory import *
+from needs import *
 
-class TypeOfMotives(enum.Enum):
-    FOOD
 
 class Motive:
-    def __init__(self, value_of_success: float, type_of_task: str = ""):
+    def __init__(self, value_of_success: float, type_of_motive: TypeOfNeed, action_plan: ActionPlan):
         self.value_of_success = value_of_success
         self.motive_strength: float = 0
         self.selected_motive: bool = False
-        self.type_of_task: str = type_of_task
+        self.type_of_motive = type_of_motive
+        # TODO: setup action plans
+        self.action_plan: ActionPlan = action_plan
 
     def update_motive_strength(self, need_indicator: float, competence_indicator: float,
                                inhibition_threshold: float = 0) -> float:

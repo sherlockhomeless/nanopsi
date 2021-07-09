@@ -1,4 +1,16 @@
 from dataclasses import dataclass
+import enum
+
+
+class TypeOfNeed(enum.Enum):
+    """
+    Classification of motive-types; Current solution is very broad and should be more finely defined
+    """
+    ENERGY = enum.auto()
+    PAIN_AVOIDANCE = enum.auto()
+    AFFILIATION = enum.auto()
+    COMPETENCE = enum.auto()
+    CERTAINTY = enum.auto()
 
 
 @dataclass
